@@ -1,0 +1,22 @@
+source_file,animal_id,experimental_day,current_behavioral_phase,stage,date,time,zeitgeber_time,age_days,weight_g,percent_baseline
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 0,baseline,Initial Weighing,N/A,N/A,,,34.1,1.0
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 1,handling,Food Restriction + Handling,2026-07-06,13:22,ZT 07:22,147.0,34.1,1.0
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 2,handling,Food Restriction + Handling,2026-07-07,13:15,ZT 07:15,148.0,32.3,0.9472140762463341
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 3,acclimation,Food Restriction + Acclimation,2026-07-08,13:40,ZT 07:40,149.0,30.8,0.9032258064516129
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 4,shaping,Food Restriction + Shaping,2026-07-09,13:44,ZT 07:44,150.0,29.8,0.873900293255132
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 5,testing,Testing,2026-07-10,13:20,ZT 07:20,151.0,28.1,0.8240469208211144
+example_animal_01_four_choice.xlsx,Example_Animal_01,Day 6,testing,Testing,2026-07-11,13:35,ZT 07:35,152.0,28.3,0.8299120234604106
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 0,baseline,Initial Weighing,2026-08-28,12:00,ZT 04:00,63.0,30.0,1.0
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 1,handling,Food Restriction + Handling,2026-08-29,11:10,ZT 03:10,64.0,30.0,1.0
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 2,handling,Food Restriction + Handling,2026-08-30,12:20,ZT 04:20,65.0,28.5,0.95
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 3,acclimation,Food Restriction + Acclimation,2026-08-31,11:15,ZT 03:15,66.0,27.0,0.9
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 4,shaping,Food Restriction + Shaping,2026-09-01,09:25,ZT 01:25,67.0,25.2,0.84
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 5,testing,Food Restriction + Testing,2026-09-02,09:00,ZT 01:00,68.0,25.0,0.8333333333333334
+example_animal_02_four_choice.xlsx,Example_Animal_02,Day 6,testing,Testing,2026-09-03,11:05,ZT 03:05,69.0,24.4,0.8133333333333332
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 0,baseline,Initial Weighing,2026-08-28,12:00,ZT 04:00,63.0,31.3,1.0
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 1,handling,Food Restriction + Handling,2026-08-29,11:10,ZT 03:10,64.0,31.6,1.0095846645367412
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 2,handling,Food Restriction + Handling,2026-08-30,12:20,ZT 04:20,65.0,29.3,0.9361022364217252
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 3,acclimation,Food Restriction + Acclimation,2026-08-31,11:15,ZT 03:15,66.0,28.1,0.8977635782747604
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 4,shaping,Food Restriction + Shaping,2026-09-01,09:25,ZT 01:25,67.0,26.5,0.8466453674121406
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 5,testing,Food Restriction + Testing,2026-09-02,09:00,ZT 01:00,68.0,25.9,0.8274760383386581
+example_animal_03_four_choice.xlsx,Example_Animal_03,Day 6,testing,Testing,2026-09-03,11:05,ZT 03:05,69.0,25.1,0.8019169329073482

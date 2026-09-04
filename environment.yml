@@ -1,0 +1,10 @@
+name: four-choice-tabs
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pandas
+  - numpy
+  - openpyxl
+  - matplotlib
+  - jupyterlab

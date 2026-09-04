@@ -1,0 +1,10 @@
+source_file,animal_id,phase,session_date,start_time,end_time,start_zeitgeber_time,end_zeitgeber_time,round,pellets_eaten,notes,time_to_eat_ne_sec,time_to_eat_sw_sec,time_to_eat_nw_sec,time_to_eat_se_sec
+example_animal_01_four_choice.xlsx,Example_Animal_01,acclimation,2026-07-08,14:51,15:26,ZT 08:51,ZT 09:26,Round 1,4/4,,,,,
+example_animal_01_four_choice.xlsx,Example_Animal_01,acclimation,2026-07-08,14:51,15:26,ZT 08:51,ZT 09:26,Round 2,4/4,,,,,
+example_animal_01_four_choice.xlsx,Example_Animal_01,acclimation,2026-07-08,14:51,15:26,ZT 08:51,ZT 09:26,Round 3,4/4,,,,,
+example_animal_02_four_choice.xlsx,Example_Animal_02,acclimation,2026-08-31,11:21,11:46,ZT 03:21,ZT 03:46,Round 1,1/4,,,,,
+example_animal_02_four_choice.xlsx,Example_Animal_02,acclimation,2026-08-31,11:21,11:46,ZT 03:21,ZT 03:46,Round 2,4/4,,,,,
+example_animal_02_four_choice.xlsx,Example_Animal_02,acclimation,2026-08-31,11:21,11:46,ZT 03:21,ZT 03:46,Round 3,4/4,,77.0,14.0,,
+example_animal_03_four_choice.xlsx,Example_Animal_03,acclimation,2026-08-31,11:21,11:46,ZT 03:21,ZT 03:46,Round 1,4/4,,,,,
+example_animal_03_four_choice.xlsx,Example_Animal_03,acclimation,2026-08-31,11:21,11:46,ZT 03:21,ZT 03:46,Round 2,4/4,,,,70.0,36.0
+example_animal_03_four_choice.xlsx,Example_Animal_03,acclimation,2026-08-31,11:21,11:46,ZT 03:21,ZT 03:46,Round 3,4/4,,,11.0,47.0,90.0
