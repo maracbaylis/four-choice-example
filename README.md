@@ -99,3 +99,4 @@ variance tables.
 
 For multi-lab analysis, run the same workflow once per lab and combine the
 `animal_level_outputs.csv` files.
+# four-choice-example
