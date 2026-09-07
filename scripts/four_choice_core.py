@@ -16,8 +16,12 @@ from typing import Any
 import numpy as np
 import pandas as pd
 from openpyxl import load_workbook
-from openpyxl.worksheet.formula import ArrayFormula
 from openpyxl.utils import get_column_letter
+
+try:
+    from openpyxl.worksheet.formula import ArrayFormula
+except ImportError:
+    ArrayFormula = ()
 
 
 MISSING_TEXT = {"", "N/A", "NA", "NAN", "NONE", "-"}
@@ -903,7 +907,8 @@ def pca_table(animals: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
     ncomp = min(3, vt.shape[0])
     scores = pd.DataFrame(u[:, :ncomp] * s[:ncomp], columns=[f"PC{i}" for i in range(1, ncomp + 1)])
     scores.insert(0, "animal_id", animals["animal_id"].values)
-    loadings = pd.DataFrame(vt[:ncomp].T, index=use, columns=[f"PC{i}" for i in range(1, ncomp + 1)]).reset_index(names="feature")
+    loadings = pd.DataFrame(vt[:ncomp].T, index=use, columns=[f"PC{i}" for i in range(1, ncomp + 1)]).reset_index()
+    loadings = loadings.rename(columns={"index": "feature"})
     variance = pd.DataFrame(
         {
             "component": [f"PC{i}" for i in range(1, ncomp + 1)],

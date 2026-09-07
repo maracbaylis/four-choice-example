@@ -11,7 +11,7 @@ keeps the notebooks short and makes the calculations easier to check.
 - `notebooks/01_read_and_standardize_input.ipynb`: reads the complete example workbooks and inspects the parsed tables.
 - `notebooks/02_quality_control_and_plots.ipynb`: reviews QC flags and writes figures from the complete example workbooks.
 - `notebooks/03_pca_and_cross_lab_ready_outputs.ipynb`: shows the PCA output tables and the cross-lab merge pattern.
-- `example_data/`: anonymized complete example workbooks with discrimination, recall, and reversal rows.
+- `example_data/`: two anonymized complete example workbooks with discrimination, recall, and reversal rows.
 - `tests/`: small checks for the core parsing and behavior rules.
 - `src/` and `scripts/`: helper code used by the notebooks.
 - `requirements.txt`: Python packages needed to run the example.
@@ -92,11 +92,11 @@ Running the notebooks creates an `outputs/notebook_example/` folder with:
 - `four_choice_master_outputs.xlsx`
 - figures in `figures/`
 
-The bundled GitHub example uses anonymized complete workbooks with
+The bundled GitHub example uses two anonymized complete workbooks with
 discrimination, recall, and reversal behavior. Because the example includes more
 than one complete animal, the PCA notebook writes PCA scores, loadings, and
-variance tables.
+variance tables. Treat that PCA as a format check and code example; biological
+interpretation should use the larger multi-lab dataset.
 
 For multi-lab analysis, run the same workflow once per lab and combine the
 `animal_level_outputs.csv` files.
-# four-choice-example

@@ -49,7 +49,8 @@ def grouped_bars(ax, means: pd.DataFrame, sems: pd.DataFrame, colors: list[str],
         offset = (gi - (len(groups) - 1) / 2) * width
         positions = [i + offset for i in x]
         ax.bar(positions, means.loc[group, cols], width=width, yerr=sems.loc[group, cols], capsize=4, label=group, color=colors[gi % len(colors)], alpha=0.82)
-    ax.set_xticks(list(x), [c.replace("_", " ") for c in cols], rotation=20, ha="right")
+    ax.set_xticks(list(x))
+    ax.set_xticklabels([c.replace("_", " ") for c in cols], rotation=20, ha="right")
     ax.set_ylabel(ylabel)
     ax.set_title(title)
     if len(groups) > 1:
@@ -86,7 +87,8 @@ def plot_ttc(animals: pd.DataFrame, figures: Path) -> None:
         if row.notna().all():
             ax.plot(x, row.values, color="#666666", alpha=0.45, linewidth=1)
             ax.scatter(x, row.values, color="#222222", s=24, zorder=3)
-    ax.set_xticks(x, ["Discrimination", "Reversal"])
+    ax.set_xticks(x)
+    ax.set_xticklabels(["Discrimination", "Reversal"])
     ax.set_ylabel("Trials to criterion")
     ax.set_title("Trials to criterion by animal")
     for i, value in enumerate(means):
@@ -223,7 +225,8 @@ def plot_error_types(animals: pd.DataFrame, figures: Path) -> None:
     means = animals[cols].apply(pd.to_numeric, errors="coerce").mean().sort_values(ascending=False)
     fig, ax = plt.subplots(figsize=(8, 4.5))
     ax.bar(range(len(means)), means.values, color="#54A24B", alpha=0.82)
-    ax.set_xticks(range(len(means)), [c.replace("_", " ") for c in means.index], rotation=25, ha="right")
+    ax.set_xticks(range(len(means)))
+    ax.set_xticklabels([c.replace("_", " ") for c in means.index], rotation=25, ha="right")
     ax.set_ylabel("Mean errors")
     ax.set_title("Reversal error-type summary")
     for i, value in enumerate(means.values):
