@@ -48,6 +48,16 @@ analysis outputs in Python. It does not rely on the workbook `SUMMARY` sheet or
 Excel helper formulas for correctness, error type, trials to criterion, ZT, age,
 percent baseline, or PCA.
 
+The first ten parsed metadata fields are treated as primary grouping and sorting
+variables, not behavior scores: `animal_id`, `strain`, `dob`,
+`homecage_mice_at_testing`, `adversity_condition`, `genotype`,
+`birth_litter_size_p05_20`, `homecage_rank`, `adversity_age_range`, and
+`vendor`. These columns are kept on the left side of the output CSVs so large
+multi-lab datasets can be grouped, filtered, or plotted consistently. Other
+metadata fields are also retained when available, including newly added metadata
+labels that are not yet part of the standard parser, so they can be reviewed
+later as possible moderators or noise variables.
+
 When the metadata or submission format needs review, the code writes
 `tables/metadata_qc.csv` and prints a short QC summary with the animal ID, source
 workbook, field, and issue.

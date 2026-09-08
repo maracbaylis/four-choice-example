@@ -98,6 +98,38 @@ METADATA_ALIASES = {
     "video_resolution": ["video_resolution"],
 }
 
+PRIMARY_METADATA_COLUMNS = [
+    "animal_id",
+    "strain",
+    "dob",
+    "homecage_mice_at_testing",
+    "adversity_condition",
+    "genotype",
+    "birth_litter_size_p05_20",
+    "homecage_rank",
+    "adversity_age_range",
+    "vendor",
+]
+
+METADATA_COLUMNS = [
+    *PRIMARY_METADATA_COLUMNS,
+    *[column for column in METADATA_ALIASES if column not in PRIMARY_METADATA_COLUMNS],
+    "group",
+    "animal_id_inferred_from_filename",
+]
+
+SUMMARY_OUTPUT_COLUMNS = [
+    "TTC_in_discrimination",
+    "Total_errors_in_discrimination",
+    "TTC_in_reversal",
+    "Total_errors_in_reversal",
+    "Perseverative_errors_in_reversal",
+    "Regressive_errors_in_reversal",
+    "O1_errors",
+    "O3_errors",
+    "O4_errors",
+]
+
 
 def is_formula_value(value: Any) -> bool:
     """Return True for Excel formulas/helper formula objects."""
@@ -256,6 +288,9 @@ def extract_metadata(wb, source_file: Path | None = None) -> dict[str, Any]:
                 out[canonical] = pairs[key]
                 used_keys.add(key)
                 break
+    for key, value in pairs.items():
+        if key not in used_keys:
+            out.setdefault(key, value)
     out["animal_id_inferred_from_filename"] = False
     if is_missing(out.get("animal_id")):
         out["animal_id"] = source_file.stem if source_file else "unknown_animal"
@@ -268,6 +303,64 @@ def extract_metadata(wb, source_file: Path | None = None) -> dict[str, Any]:
         if key in out:
             out[key] = format_time(out[key])
     return out
+
+
+def order_animal_output_columns(animals: pd.DataFrame) -> pd.DataFrame:
+    """Put metadata/grouping columns before calculated behavior outputs."""
+    if animals.empty:
+        return animals
+    lead = metadata_lead_columns(animals)
+    known_metadata = [col for col in lead if col in animals.columns]
+    extra_metadata = [
+        col
+        for col in animals.columns
+        if col not in known_metadata
+        and not col.startswith(("disc_", "recall_", "rev_"))
+        and col not in SUMMARY_OUTPUT_COLUMNS
+    ]
+    summary = [col for col in SUMMARY_OUTPUT_COLUMNS if col in animals.columns]
+    phase_metrics = [col for col in animals.columns if col.startswith(("disc_", "recall_", "rev_"))]
+    remaining = [col for col in animals.columns if col not in known_metadata + extra_metadata + summary + phase_metrics]
+    return animals[known_metadata + extra_metadata + summary + phase_metrics + remaining]
+
+
+def metadata_lead_columns(frame: pd.DataFrame | None = None) -> list[str]:
+    """Return the standard left-side metadata columns for output tables."""
+    columns = ["animal_id", "source_file"] + [col for col in METADATA_COLUMNS if col != "animal_id"]
+    if frame is None:
+        return columns
+    return [col for col in columns if col in frame.columns]
+
+
+def metadata_context_columns(metadata: pd.DataFrame) -> list[str]:
+    """Return known and newly discovered metadata columns in a stable order."""
+    known = metadata_lead_columns(metadata)
+    extras = [
+        col
+        for col in metadata.columns
+        if col not in known
+        and not col.startswith(("disc_", "recall_", "rev_"))
+        and col not in SUMMARY_OUTPUT_COLUMNS
+    ]
+    return known + extras
+
+
+def add_metadata_context(frame: pd.DataFrame, metadata: pd.DataFrame) -> pd.DataFrame:
+    """Add metadata columns to the left side of a trial/session/weight table."""
+    if frame.empty or metadata.empty or "animal_id" not in frame.columns or "animal_id" not in metadata.columns:
+        return frame
+    join_keys = ["animal_id"]
+    if "source_file" in frame.columns and "source_file" in metadata.columns:
+        join_keys = ["animal_id", "source_file"]
+    context_cols = [col for col in metadata_context_columns(metadata) if col in metadata.columns]
+    keep_context = [col for col in context_cols if col not in join_keys]
+    metadata_context = metadata[join_keys + keep_context].drop_duplicates(join_keys, keep="first")
+    base = frame.drop(columns=[col for col in keep_context if col in frame.columns])
+    merged = base.merge(metadata_context, on=join_keys, how="left")
+    lead = metadata_lead_columns(merged)
+    extra_metadata = [col for col in keep_context if col in merged.columns and col not in lead]
+    remaining = [col for col in merged.columns if col not in lead + extra_metadata]
+    return merged[lead + extra_metadata + remaining]
 
 
 def extract_weight_rows(wb, animal: dict[str, Any], source_file: Path) -> pd.DataFrame:
@@ -869,7 +962,7 @@ def summarize_animals(trials: pd.DataFrame, metadata: pd.DataFrame) -> pd.DataFr
         summary_columns["O3_errors"] = animals.get("rev_O3_errors")
         summary_columns["O4_errors"] = animals.get("rev_O4_errors")
     animals = pd.concat([animals, pd.DataFrame(summary_columns, index=animals.index)], axis=1)
-    return animals
+    return order_animal_output_columns(animals)
 
 
 def first_nonempty(values: Any) -> str:

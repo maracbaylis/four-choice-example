@@ -14,7 +14,7 @@ SCRIPT_DIR = REPO_ROOT / "scripts"
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from four_choice_core import pca_table, summarize_animals, summarize_sessions  # noqa: E402
+from four_choice_core import add_metadata_context, pca_table, summarize_animals, summarize_sessions  # noqa: E402
 from run_four_choice_analysis import (  # noqa: E402
     build_qc_table,
     parse_all,
@@ -70,7 +70,10 @@ def run_pipeline(inputs: str | Path | list[str | Path], outdir: str | Path, make
 
     trials, metadata, weights, acclim = parse_all(paths)
 
-    sessions = summarize_sessions(trials)
+    trials = add_metadata_context(trials, metadata)
+    weights = add_metadata_context(weights, metadata)
+    acclim = add_metadata_context(acclim, metadata)
+    sessions = add_metadata_context(summarize_sessions(trials), metadata)
     animals = summarize_animals(trials, metadata)
     qc = build_qc_table(metadata, trials, weights)
     pca_scores, pca_loadings, pca_variance = pca_table(animals)

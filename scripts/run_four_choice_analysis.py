@@ -12,7 +12,7 @@ import pandas as pd
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from four_choice_core import autosize_excel, metadata_qc, parse_tabs_workbook, pca_table, submission_qc, summarize_animals, summarize_sessions  # noqa: E402
+from four_choice_core import add_metadata_context, autosize_excel, metadata_qc, parse_tabs_workbook, pca_table, submission_qc, summarize_animals, summarize_sessions  # noqa: E402
 
 
 DEFAULT_OUT = Path("four_choice_tabs_pipeline/outputs/example_analysis")
@@ -375,6 +375,11 @@ latency, entry/locomotor summaries, odor-choice percentages, and odor-entry
 percentages derived by cross-referencing entry sequence quadrants against each
 trial's ramekin order.
 
+The left side of the CSV outputs carries metadata context. The first ten parsed
+metadata fields are treated as primary grouping and sorting variables rather
+than behavior scores. Additional metadata fields are retained as possible
+moderator or noise variables for later cross-lab review.
+
 Some figure types require recall or reversal rows. If those sheets are empty in
 the input workbooks, the corresponding figures are skipped.
 """
@@ -392,7 +397,10 @@ def main() -> None:
         raise SystemExit("No .xlsx TABS workbooks found.")
 
     trials, metadata, weights, acclim = parse_all(paths)
-    sessions = summarize_sessions(trials)
+    trials = add_metadata_context(trials, metadata)
+    weights = add_metadata_context(weights, metadata)
+    acclim = add_metadata_context(acclim, metadata)
+    sessions = add_metadata_context(summarize_sessions(trials), metadata)
     animals = summarize_animals(trials, metadata)
     qc = build_qc_table(metadata, trials, weights)
     pca_scores, pca_loadings, pca_variance = pca_table(animals)

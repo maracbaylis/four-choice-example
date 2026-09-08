@@ -28,5 +28,10 @@ latency, entry/locomotor summaries, odor-choice percentages, and odor-entry
 percentages derived by cross-referencing entry sequence quadrants against each
 trial's ramekin order.
 
+The left side of the CSV outputs carries metadata context. The first ten parsed
+metadata fields are treated as primary grouping and sorting variables rather
+than behavior scores. Additional metadata fields are retained as possible
+moderator or noise variables for later cross-lab review.
+
 Some figure types require recall or reversal rows. If those sheets are empty in
 the input workbooks, the corresponding figures are skipped.
