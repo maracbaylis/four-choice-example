@@ -12,7 +12,7 @@ import pandas as pd
 SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from four_choice_core import add_metadata_context, autosize_excel, metadata_qc, parse_tabs_workbook, pca_table, submission_qc, summarize_animals, summarize_sessions  # noqa: E402
+from four_choice_core import add_metadata_context, autosize_excel, metadata_context_columns, metadata_qc, parse_tabs_workbook, pca_table, submission_qc, summarize_animals, summarize_sessions  # noqa: E402
 
 
 DEFAULT_OUT = Path("four_choice_tabs_pipeline/outputs/example_analysis")
@@ -100,13 +100,7 @@ def write_excel_output(out_xlsx: Path, trials: pd.DataFrame, sessions: pd.DataFr
         if not acclim.empty:
             acclim.to_excel(writer, sheet_name="acclim_long", index=False)
         qc.to_excel(writer, sheet_name="metadata_qc", index=False)
-        core_cols = [
-            "animal_id",
-            "lab_source",
-            "experiment_cohort",
-            "group",
-            "sex",
-            "genotype",
+        core_cols = metadata_context_columns(animals) + [
             "TTC_in_discrimination",
             "Total_errors_in_discrimination",
             "TTC_in_reversal",
@@ -139,7 +133,7 @@ def write_excel_output(out_xlsx: Path, trials: pd.DataFrame, sessions: pd.DataFr
 
 
 def make_prism_tables(animals: pd.DataFrame) -> pd.DataFrame:
-    id_cols = [c for c in ["animal_id", "lab_source", "experiment_cohort", "group", "sex", "genotype"] if c in animals.columns]
+    id_cols = [c for c in metadata_context_columns(animals) if c in animals.columns]
     value_cols = [
         c
         for c in [

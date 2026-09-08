@@ -999,7 +999,11 @@ def pca_table(animals: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
     u, s, vt = np.linalg.svd(z.to_numpy(), full_matrices=False)
     ncomp = min(3, vt.shape[0])
     scores = pd.DataFrame(u[:, :ncomp] * s[:ncomp], columns=[f"PC{i}" for i in range(1, ncomp + 1)])
-    scores.insert(0, "animal_id", animals["animal_id"].values)
+    context_cols = [col for col in metadata_context_columns(animals) if col in animals.columns]
+    if context_cols:
+        scores = pd.concat([animals[context_cols].reset_index(drop=True), scores], axis=1)
+    else:
+        scores.insert(0, "animal_id", animals["animal_id"].values)
     loadings = pd.DataFrame(vt[:ncomp].T, index=use, columns=[f"PC{i}" for i in range(1, ncomp + 1)]).reset_index()
     loadings = loadings.rename(columns={"index": "feature"})
     variance = pd.DataFrame(

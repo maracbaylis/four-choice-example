@@ -16,6 +16,7 @@ from four_choice_core import (  # noqa: E402
     extract_metadata,
     metadata_qc,
     order_animal_output_columns,
+    pca_table,
     parse_entry_sequence,
     reversal_error_type,
     trials_to_criterion,
@@ -134,6 +135,39 @@ class BiologyRuleTests(unittest.TestCase):
 
         self.assertEqual(metadata["animal_id"], "animal_1")
         self.assertEqual(metadata["new_possible_noise_variable"], "keep me")
+
+    def test_pca_scores_keep_metadata_context(self) -> None:
+        animals = pd.DataFrame(
+            [
+                {
+                    "animal_id": "animal_1",
+                    "source_file": "one.xlsx",
+                    "strain": "C57BL/6J",
+                    "adversity_condition": "Control",
+                    "genotype": "Wildtype",
+                    "TTC_in_discrimination": 10,
+                    "Total_errors_in_discrimination": 2,
+                    "TTC_in_reversal": 20,
+                    "Total_errors_in_reversal": 8,
+                },
+                {
+                    "animal_id": "animal_2",
+                    "source_file": "two.xlsx",
+                    "strain": "C57BL/6J",
+                    "adversity_condition": "Treatment",
+                    "genotype": "Wildtype",
+                    "TTC_in_discrimination": 14,
+                    "Total_errors_in_discrimination": 4,
+                    "TTC_in_reversal": 28,
+                    "Total_errors_in_reversal": 12,
+                },
+            ]
+        )
+
+        scores, _, _ = pca_table(animals)
+
+        self.assertEqual(list(scores.columns[:5]), ["animal_id", "source_file", "strain", "adversity_condition", "genotype"])
+        self.assertIn("PC1", scores.columns)
 
 
 if __name__ == "__main__":
