@@ -136,6 +136,34 @@ class BiologyRuleTests(unittest.TestCase):
         self.assertEqual(metadata["animal_id"], "animal_1")
         self.assertEqual(metadata["new_possible_noise_variable"], "keep me")
 
+    def test_metadata_parser_standardizes_na_adversity_as_control(self) -> None:
+        workbook = Workbook()
+        ws = workbook.active
+        ws.title = "METADATA"
+        ws["A1"] = "animal_id"
+        ws["B1"] = "animal_1"
+        ws["A2"] = "Adversity Condition"
+        ws["B2"] = "N/A"
+
+        metadata = extract_metadata(workbook)
+
+        self.assertEqual(metadata["adversity_condition"], "Control")
+
+    def test_metadata_parser_does_not_treat_values_as_labels(self) -> None:
+        workbook = Workbook()
+        ws = workbook.active
+        ws.title = "METADATA"
+        ws["A1"] = "Animal ID"
+        ws["B1"] = "animal_1"
+        ws["C1"] = "Strain"
+        ws["D1"] = "C57BL/6J"
+
+        metadata = extract_metadata(workbook)
+
+        self.assertEqual(metadata["strain"], "C57BL/6J")
+        self.assertNotIn("animal_1", metadata)
+        self.assertNotIn("c57bl_6j", metadata)
+
     def test_pca_scores_keep_metadata_context(self) -> None:
         animals = pd.DataFrame(
             [

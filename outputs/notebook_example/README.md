@@ -1,12 +1,12 @@
 # Four Choice TABS Analysis Run
 
-Input workbooks: 2
-Trial rows: 94
-Session rows: 6
-Animal rows: 2
-Weight rows: 14
-Acclimation rows: 6
-Metadata QC flags: 0
+Input workbooks: 11
+Trial rows: 1030
+Session rows: 33
+Animal rows: 11
+Weight rows: 21
+Acclimation rows: 33
+Metadata QC flags: 18
 
 Main outputs:
 - `four_choice_master_outputs.xlsx`

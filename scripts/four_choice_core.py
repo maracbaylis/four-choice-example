@@ -159,6 +159,14 @@ def is_no_value(value: Any) -> bool:
     return clean_text(value).upper() in NO_VALUE_TEXT
 
 
+def normalize_adversity_condition(value: Any) -> str:
+    """Standardize explicit no-adversity values without guessing blanks."""
+    text = clean_text(value)
+    if text.upper() in {"N/A", "NA", "NONE", "NO ADVERSITY"}:
+        return "Control"
+    return text
+
+
 def maybe_float(value: Any) -> float | None:
     if value is None or value == "" or is_formula_value(value):
         return None
@@ -260,11 +268,14 @@ def compute_age_days(test_date: Any, dob: Any) -> float | None:
     return float((parsed_test_date - parsed_dob).days)
 
 
-def sheet_value_pairs(ws, max_row: int = 30, max_col: int = 10) -> dict[str, Any]:
+def sheet_value_pairs(ws, max_row: int = 30, max_col: int = 10, label_columns: list[int] | None = None) -> dict[str, Any]:
     """Read label/value pairs where labels are followed by values to the right."""
     pairs: dict[str, Any] = {}
+    columns = label_columns or list(range(1, min(ws.max_column, max_col) + 1))
     for row in range(1, min(ws.max_row, max_row) + 1):
-        for col in range(1, min(ws.max_column, max_col) + 1):
+        for col in columns:
+            if col > min(ws.max_column, max_col):
+                continue
             raw_label = ws.cell(row, col).value
             label = clean_label(raw_label)
             if not label:
@@ -279,7 +290,7 @@ def extract_metadata(wb, source_file: Path | None = None) -> dict[str, Any]:
     if "METADATA" not in wb.sheetnames:
         return {"source_file": str(source_file) if source_file else "", "animal_id": source_file.stem if source_file else "unknown_animal"}
     ws = wb["METADATA"]
-    pairs = sheet_value_pairs(ws, max_row=26, max_col=9)
+    pairs = sheet_value_pairs(ws, max_row=26, max_col=9, label_columns=[1, 3, 5, 7, 9])
     out: dict[str, Any] = {"source_file": str(source_file) if source_file else ""}
     used_keys: set[str] = set()
     for canonical, keys in METADATA_ALIASES.items():
@@ -296,6 +307,8 @@ def extract_metadata(wb, source_file: Path | None = None) -> dict[str, Any]:
         out["animal_id"] = source_file.stem if source_file else "unknown_animal"
         out["animal_id_inferred_from_filename"] = True
     out["animal_id"] = clean_text(out["animal_id"])
+    if "adversity_condition" in out:
+        out["adversity_condition"] = normalize_adversity_condition(out["adversity_condition"])
     for key in ["dob"]:
         if key in out:
             out[key] = excel_date(out[key])
@@ -445,7 +458,7 @@ def metadata_qc(metadata: pd.DataFrame) -> pd.DataFrame:
     required = ["animal_id", "experiment_cohort", "adversity_condition", "sex", "genotype", "lab_source"]
     controlled = {
         "sex": {"M", "F", "UNKNOWN"},
-        "adversity_condition": {"CONTROL", "TREATMENT", "N/A", "NA", "NONE", "UNKNOWN"},
+        "adversity_condition": {"CONTROL", "FOOD RESTRICTION", "TREATMENT", "UNKNOWN"},
     }
     date_fields = ["dob"]
     time_fields = ["colony_lights_on_time"]

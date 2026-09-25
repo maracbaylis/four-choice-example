@@ -1,1 +1,19 @@
 animal_id,source_file,field,qc_flag,value,message
+Example_Animal_03,example_animal_03_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_03,example_animal_03_four_choice.xlsx,genotype,missing_required_metadata,,Missing required metadata field 'genotype'. Fill this field in the METADATA sheet.
+Example_Animal_04,example_animal_04_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_05,example_animal_05_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_06,example_animal_06_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_07,example_animal_07_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_08,example_animal_08_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_09,example_animal_09_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_10,example_animal_10_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_11,example_animal_11_four_choice.xlsx,experiment_cohort,missing_required_metadata,,Missing required metadata field 'experiment_cohort'. Fill this field in the METADATA sheet.
+Example_Animal_04,example_animal_04_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_05,example_animal_05_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_06,example_animal_06_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_07,example_animal_07_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_08,example_animal_08_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_09,example_animal_09_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_10,example_animal_10_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."
+Example_Animal_11,example_animal_11_four_choice.xlsx,weight_long,no_weight_rows_found,,"No weight rows were found for this animal. Fill Date, Time, or Weight in the WEIGHT sheet if weight data should be present."

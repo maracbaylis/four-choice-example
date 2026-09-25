@@ -10,7 +10,30 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import pandas as pd
+
+
+PCA_CONDITION_COLORS = {"Control": "#4E79A7", "Treatment": "#E15759", "Unknown": "#777777"}
+PCA_LAB_MARKERS = {"UCSC": "o", "Wilbrecht Lab": "s", "Other lab": "^"}
+
+
+def pca_condition_label(row: pd.Series) -> str:
+    value = str(row.get("adversity_condition", row.get("group", ""))).strip().lower()
+    if value == "control":
+        return "Control"
+    if value in {"treatment", "food restriction"}:
+        return "Treatment"
+    return "Unknown"
+
+
+def pca_lab_label(row: pd.Series) -> str:
+    value = str(row.get("lab_source", "")).strip().lower()
+    if "ucsc" in value:
+        return "UCSC"
+    if "wilbrecht" in value or "berkeley" in value:
+        return "Wilbrecht Lab"
+    return "Other lab"
 
 
 def group_series(df: pd.DataFrame) -> pd.Series:
@@ -317,16 +340,40 @@ def plot_pca(tables: Path, figures: Path) -> None:
     scores = pd.read_csv(pca_path)
     if not {"PC1", "PC2"}.issubset(scores.columns):
         return
-    fig, ax = plt.subplots(figsize=(5.5, 4.5))
-    ax.scatter(scores["PC1"], scores["PC2"], color="#B279A2", s=48)
+    fig, ax = plt.subplots(figsize=(7.0, 4.5))
     for _, row in scores.iterrows():
-        ax.text(row["PC1"], row["PC2"], str(row["animal_id"]), fontsize=8, ha="left", va="bottom")
+        condition = pca_condition_label(row)
+        lab = pca_lab_label(row)
+        ax.scatter(
+            row["PC1"],
+            row["PC2"],
+            color=PCA_CONDITION_COLORS[condition],
+            marker=PCA_LAB_MARKERS[lab],
+            s=58,
+            edgecolor="white",
+            linewidth=0.5,
+        )
     ax.axhline(0, color="#AAAAAA", linewidth=0.8)
     ax.axvline(0, color="#AAAAAA", linewidth=0.8)
     ax.set_xlabel(pca_axis_label(tables, "PC1"))
     ax.set_ylabel(pca_axis_label(tables, "PC2"))
-    ax.set_title("First PCA from Four Choice outputs")
-    fig.tight_layout()
+    ax.set_title("PCA from Four Choice outputs")
+    present_conditions = {pca_condition_label(row) for _, row in scores.iterrows()}
+    condition_handles = [
+        Line2D([], [], color=PCA_CONDITION_COLORS[condition], marker="o", linestyle="None", markersize=7, label=condition)
+        for condition in ["Control", "Treatment", "Unknown"]
+        if condition in present_conditions
+    ]
+    condition_legend = ax.legend(handles=condition_handles, title="Condition", bbox_to_anchor=(1.02, 1), loc="upper left", frameon=False, fontsize=8, title_fontsize=9)
+    ax.add_artist(condition_legend)
+    present_labs = {pca_lab_label(row) for _, row in scores.iterrows()}
+    labs = [lab for lab in ["UCSC", "Wilbrecht Lab", "Other lab"] if lab in present_labs]
+    lab_handles = [
+        Line2D([], [], color="#555555", marker=PCA_LAB_MARKERS[lab], linestyle="None", markersize=7, label=lab)
+        for lab in labs
+    ]
+    ax.legend(handles=lab_handles, title="Lab ID", bbox_to_anchor=(1.02, 0.68), loc="upper left", frameon=False, fontsize=8, title_fontsize=9)
+    fig.tight_layout(rect=(0, 0, 0.78, 1))
     fig.savefig(figures / "pca_scores.png", dpi=300)
     plt.close(fig)
 

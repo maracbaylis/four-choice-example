@@ -292,52 +292,6 @@ def plot_recall_entries(animals: pd.DataFrame, outdir: Path) -> None:
     save_svg(lines, outdir / "entry_locomotor_summary.svg")
 
 
-def pca_axis_label(pca_variance: pd.DataFrame, component: str) -> str:
-    if pca_variance.empty or not {"component", "explained_variance_ratio"}.issubset(pca_variance.columns):
-        return component
-    row = pca_variance[pca_variance["component"] == component]
-    if row.empty:
-        return component
-    percent = pd.to_numeric(row["explained_variance_ratio"], errors="coerce").iloc[0] * 100
-    if pd.isna(percent):
-        return component
-    return f"{component} ({percent:.1f}%)"
-
-
-def plot_pca(pca_scores: pd.DataFrame, pca_variance: pd.DataFrame, outdir: Path) -> None:
-    if pca_scores.empty or not {"PC1", "PC2"}.issubset(pca_scores.columns):
-        return
-    xvals = pca_scores["PC1"].astype(float)
-    yvals = pca_scores["PC2"].astype(float)
-    xmin, xmax = xvals.min(), xvals.max()
-    ymin, ymax = yvals.min(), yvals.max()
-    xpad = (xmax - xmin or 1) * 0.2
-    ypad = (ymax - ymin or 1) * 0.2
-    xmin, xmax, ymin, ymax = xmin - xpad, xmax + xpad, ymin - ypad, ymax + ypad
-    def sx(v: float) -> float:
-        return 70 + (v - xmin) / (xmax - xmin or 1) * 420
-    def sy(v: float) -> float:
-        return 310 - (v - ymin) / (ymax - ymin or 1) * 250
-
-    lines = svg_header(560, 360)
-    lines.append('<text x="280" y="24" text-anchor="middle" class="title">First PCA from Four Choice outputs</text>')
-    lines.append('<line x1="70" y1="310" x2="500" y2="310" class="axis"/>')
-    lines.append('<line x1="70" y1="50" x2="70" y2="310" class="axis"/>')
-    if xmin < 0 < xmax:
-        x0 = sx(0)
-        lines.append(f'<line x1="{x0:.1f}" y1="50" x2="{x0:.1f}" y2="310" stroke="#aaa"/>')
-    if ymin < 0 < ymax:
-        y0 = sy(0)
-        lines.append(f'<line x1="70" y1="{y0:.1f}" x2="500" y2="{y0:.1f}" stroke="#aaa"/>')
-    for _, row in pca_scores.iterrows():
-        x, y = sx(float(row["PC1"])), sy(float(row["PC2"]))
-        lines.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="#B279A2"/>')
-        lines.append(f'<text x="{x+6:.1f}" y="{y-6:.1f}" class="label">{row["animal_id"]}</text>')
-    lines.append(f'<text x="285" y="345" text-anchor="middle">{pca_axis_label(pca_variance, "PC1")}</text>')
-    lines.append(f'<text x="25" y="180" text-anchor="middle" transform="rotate(-90 25 180)">{pca_axis_label(pca_variance, "PC2")}</text>')
-    save_svg(lines, outdir / "pca_scores.svg")
-
-
 def write_readme(outdir: Path, paths: list[Path], trials: pd.DataFrame, sessions: pd.DataFrame, animals: pd.DataFrame, weights: pd.DataFrame, acclim: pd.DataFrame, qc: pd.DataFrame) -> None:
     text = f"""# Four Choice TABS Analysis Run
 
@@ -407,7 +361,6 @@ def main() -> None:
     plot_ttc(animals, figures)
     plot_error_types(animals, figures)
     plot_recall_entries(animals, figures)
-    plot_pca(pca_scores, pca_variance, figures)
     write_readme(args.outdir, paths, trials, sessions, animals, weights, acclim, qc)
 
     print(f"Parsed {len(paths)} workbook(s).")

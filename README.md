@@ -11,7 +11,7 @@ keeps the notebooks short and makes the calculations easier to check.
 - `notebooks/01_read_and_standardize_input.ipynb`: reads the complete example workbooks and inspects the parsed tables.
 - `notebooks/02_quality_control_and_plots.ipynb`: reviews QC flags and writes figures from the complete example workbooks.
 - `notebooks/03_pca_and_cross_lab_ready_outputs.ipynb`: shows the PCA output tables and the cross-lab merge pattern.
-- `example_data/`: two anonymized complete example workbooks with discrimination, recall, and reversal rows.
+- `example_data/`: 11 anonymized complete example workbooks with discrimination, recall, and reversal rows.
 - `tests/`: small checks for the core parsing and behavior rules.
 - `src/` and `scripts/`: helper code used by the notebooks.
 - `requirements.txt`: Python packages needed to run the example.
@@ -58,6 +58,10 @@ metadata fields are also retained when available, including newly added metadata
 labels that are not yet part of the standard parser, so they can be reviewed
 later as possible moderators or noise variables.
 
+For `adversity_condition`, `N/A`, `NA`, `None`, and `No adversity` are
+standardized to `Control`. Blank values are left unassigned for review rather
+than being assumed to be controls.
+
 When the metadata or submission format needs review, the code writes
 `tables/metadata_qc.csv` and prints a short QC summary with the animal ID, source
 workbook, field, and issue.
@@ -102,11 +106,11 @@ Running the notebooks creates an `outputs/notebook_example/` folder with:
 - `four_choice_master_outputs.xlsx`
 - figures in `figures/`
 
-The bundled GitHub example uses two anonymized complete workbooks with
-discrimination, recall, and reversal behavior. Because the example includes more
-than one complete animal, the PCA notebook writes PCA scores, loadings, and
-variance tables. Treat that PCA as a format check and code example; biological
-interpretation should use the larger multi-lab dataset.
+The bundled GitHub example uses 11 anonymized complete workbooks with
+discrimination, recall, and reversal behavior, including UCSC and C57 examples.
+The PCA notebook writes PCA scores, loadings, and variance tables. Treat that PCA
+as a format check and code example; biological interpretation should use the
+larger multi-lab dataset.
 
 For multi-lab analysis, run the same workflow once per lab and combine the
 `animal_level_outputs.csv` files.
